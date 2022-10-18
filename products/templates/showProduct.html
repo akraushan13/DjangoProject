@@ -26,7 +26,56 @@
         {% endif %}   
             
         </div>
+
         
+        <div class="row m-5">
+            <div class="col-md-12 m-2">
+    
+              {% if products.has_other_pages %}
+                <ul class="pagination">
+                      {% if products.has_previous %}  
+                          <li class="page-item">
+                            <a href="?page={{ products.previous_page_number }}" class="page-link">&laquo;
+                            </a>
+                          <li>
+                        {% else %}
+                          <li class="page-item disabled">
+                            <a class="page-link" href="?page=1">&laquo;</a>
+                          </li>     
+                       {% endif %}
+    
+                    {% for i in products.paginator.page_range %}
+                          {% if products.number == i %}
+                            <li class="page-item active">
+                              <a class="page-link">{{ i }}</a>
+                            </li>
+                          {% else %}
+                          <li class="page-item">
+                            <a href="?page={{ i }}" class="page-link">{{ i }}</a>
+                          </li>  
+                          {% endif %}
+                    {% endfor %}
+  
+  
+    
+                    {% if products.has_next %}  
+                    <li class="page-item">
+                      <a href="?page={{ products.next_page_number }}" class="page-link">&raquo;
+                      </a>
+                    <li>
+                    {% else %}
+                    <li class="page-item disabled">
+                      <a class="page-link" href="?page={{ products.paginator.num_pages }}">&raquo;</a>
+                    </li>     
+                    {% endif %}
+    
+                </ul>
+              {% endif %}
+    
+            </div>
+          </div>
+
+
 </div>
 
     

@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from . models import Product
 from . forms import ProductForm
 
@@ -7,7 +8,17 @@ from . forms import ProductForm
 
 
 def ShowAllProducts(request):
-    products = Product.objects.all()
+    products = Product.objects.filter(is_published = True).order_by('-price')
+    
+    page_num = request.GET.get("page")
+    
+    paginator = Paginator(products, 2)
+    try:
+        products = paginator.page(page_num)
+    except PageNotAnInteger:
+        products = paginator.page(1)
+    except EmptyPage:
+        products = paginator.page(paginator.num_pages)      
     
     context = {
         'products' : products
@@ -66,3 +77,14 @@ def deleteProduct(request, pk):
     product = Product.objects.get(id=pk)
     product.delete()
     return redirect('showProducts')
+
+
+def searchBar(request):
+    if request.method == 'GET':
+        query = request.GET.get('query')
+        if query:
+            products = Product.objects.filter(name__icontains=query) 
+            return render(request, 'searchbar.html', {'products':products})
+        else:
+            print("No information to show")
+            return render(request, 'searchbar.html', {})
