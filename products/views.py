@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from . models import Product
 from . forms import ProductForm
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
@@ -27,6 +28,8 @@ def ShowAllProducts(request):
     return render(request, 'showProduct.html', context)
 
 
+
+
 def productDetail(request, pk):
     eachProduct = Product.objects.get(id=pk)
     
@@ -37,6 +40,8 @@ def productDetail(request, pk):
     return render(request, 'productDetail.html', context) 
 
 
+
+@login_required(login_url='showProducts')
 def addProduct(request):
     form = ProductForm()
     
@@ -54,6 +59,8 @@ def addProduct(request):
     return render(request, 'addProduct.html',context)
 
 
+
+@login_required(login_url='showProducts')
 def updateProduct(request,pk):
     product = Product.objects.get(id=pk)
 
@@ -73,6 +80,8 @@ def updateProduct(request,pk):
 
 
 
+
+@login_required(login_url='showProducts')
 def deleteProduct(request, pk):
     product = Product.objects.get(id=pk)
     product.delete()
